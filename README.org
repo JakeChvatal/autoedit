@@ -8,7 +8,8 @@ xdg-open for other files; if EDITOR is not configured, 'text/*' files are
 opened with xdg-open as well.
 
 * Installation
-Provide your zsh package manager a path to this repository
+Provide your zsh package manager a path to this repository.
+
 Example for antigen:
 #+begin_src zsh
 antigen bundle 'jakechvatal/autoedit'
