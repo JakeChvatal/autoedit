@@ -1,6 +1,15 @@
 #+title: AutoEdit
-A zsh plugin that automatically opens common file types in the ```EDITOR```
-of your choice (as defined by $\EDITOR).
+A zsh plugin that automatically opens common file types provided the path to
+the file.
+
+The plugin makes use of the MIME type of your file. It defaults to using
+your EDITOR environment variable for files with MIME type 'text/*' and
+xdg-open for other files; if EDITOR is not configured, 'text/*' files are
+opened with xdg-open as well.
 
 * Installation
-
+Provide your zsh package manager a path to this repository
+Example for antigen:
+#+begin_src zsh
+antigen bundle 'jakechvatal/autoedit'
+#+end_src

@@ -1,52 +1,44 @@
 # --- configuration ---
+# default to not creating a file
 (( ! ${+ZSH_AUTOEDIT_CREATE_FILE} )) &&
-    typeset -g ZSH_AUTOEDIT_CREATE_FILE=true
+    typeset -g ZSH_AUTOEDIT_CREATE_FILE=false
 
-# file 
-edit_ext=(
-    js 
-    jsx 
-    py 
-    zsh
+# default to using $EDITOR
+ZSH_AUTOEDIT_EDITOR=${EDITOR}
+(( ! ${+EDITOR} )) &&
+    typeset -g ZSH_AUTOEDIT_EDITOR="xdg-open"
 
-    txt
-    org 
-    md 
-    yml 
-    yaml
-    toml 
-    json
-)
-
-# files to support
-edit_files=(
-    Dockerfile 
-    # .gitignore TODO allow for editing dotfiles
-    # .zshrc
-)
-
-# VIM PLUGIN - auto edit file
+# given the current buffer,
+# if provided a valid file path, 
+# edit the file at that path.
 _autoedit() {
-    cmdstr=${BUFFER//[$'\t\r\n']}
-    extension="${cmdstr##*.}" 
-     
+    cmdstr=${BUFFER//[$'\t\r\n']} # remove newline
+    extension="${cmdstr##*.}"     # get file extension
+    # ensure cmd is only one line 
     if [[ ! $cmdstr =~ ( |\') ]]; then
-        if [ -z ${cmdstr##*.*} ]; then
-            if [[ ! "$(($edit_ext[(Ie)$extension]))" == 0 ]];  then # if the file name has a text editing extension, use the default editor to edit the file
-                BUFFER="$EDITOR $cmdstr"
-            elif [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then 
-                # if the file type isn't supported and GUI is available,
-                # touch it and open it with X
-                BUFFER="touch $cmdstr && xdg-open $cmdstr"
+        # if the file exists:
+        if [ -w $cmdstr ]; then
+            # get mime type of file  
+            mime=$(file --mime-type ${cmdstr})
+            mime2=${mime%%/*}
+            bigmime=${mime2##* }
+            smlmime=${mime##*/}
+            if [[ $bigmime == "text" ]]; then
+                # open with text editor
+                BUFFER="$EDITOR $cmdstr" 
+            elif [[ $bigmime == "inode" ]]; then
+                echo "will not open folder; use autocd"
+            elif [[ -z $DISPLAY ]]; then 
+                # else if a gui is available:
+                BUFFER="xdg-open $cmdstr"
             fi
-        elif [[ ! "$(($edit_files[(Ie)$cmdstr]))" == 0 ]]; then
-            # if the full name of the file matches, edit it
-            # TODO match only the last . or / (support full paths)
-            BUFFER="$EDITOR $cmdstr"
+
+        elif [[ $ZSH_AUTOEDIT_CREATE_FILE ]]; then
+            # TODO perhaps create file
         fi
     fi
 
-    zle .accept-line
+    zle .accept-line # feed the line back to zsh
 }
 
 zle -N accept-line _autoedit
