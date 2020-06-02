@@ -25,7 +25,7 @@ _autoedit() {
             smlmime=${mime##*/}
             if [[ $bigmime == "text" ]]; then
                 # open with text editor
-                BUFFER="$EDITOR $cmdstr" 
+                BUFFER="$ZSH_AUTOEDIT_EDITOR $cmdstr" 
             elif [[ $bigmime == "inode" ]]; then
                 echo "will not open folder; use autocd"
             elif [[ -z $DISPLAY ]]; then 
