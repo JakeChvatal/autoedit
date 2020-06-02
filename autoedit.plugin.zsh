@@ -27,7 +27,7 @@ _autoedit() {
                 # open with text editor
                 BUFFER="$ZSH_AUTOEDIT_EDITOR $cmdstr" 
             elif [[ $bigmime == "inode" ]]; then
-                echo "will not open folder; use autocd"
+                # echo "will not open folder; use autocd"
             elif [[ -z $DISPLAY ]]; then 
                 # else if a gui is available:
                 BUFFER="xdg-open $cmdstr"
