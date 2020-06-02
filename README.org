@@ -1,6 +1,6 @@
 #+title: AutoEdit
-A zsh plugin that automatically opens common file types provided the path to
-the file.
+A zsh plugin that automatically opens common file types.
+Provide the path to the file, press enter, and the file will be opened in your editor.
 
 The plugin makes use of the MIME type of your file. It defaults to using
 your EDITOR environment variable for files with MIME type 'text/*' and
