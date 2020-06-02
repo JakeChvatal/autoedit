@@ -1,0 +1,6 @@
+#+title: AutoEdit
+A zsh plugin that automatically opens common file types in the ```EDITOR```
+of your choice (as defined by $\EDITOR).
+
+* Installation
+
